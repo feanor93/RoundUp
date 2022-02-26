@@ -36,6 +36,10 @@ public class Main {
 
         //get account balance
         Balance balance = bankAccountInterface.getBalance(accountUid);
+
+        /**
+         * it's possible to retrieve the currency and the minorUnits for the balance
+         */
         //System.out.println("balance in total is: " + balance.getAmount().getCurrency());
         //System.out.println("balance minorUnits: " + balance.getAmount().getMinorUnits());
 
@@ -56,7 +60,9 @@ public class Main {
             System.exit(0);
         }
 
-        //do the roundUp for every transaction in the passed list
+        /**
+         * do the roundUp for every transaction in the passed list
+         */
         Amount roundUpMoney = roundUpOperation.doRoundUp(allTransactions);
 
         //this is how much the tool rounded up
@@ -83,14 +89,16 @@ public class Main {
         //for every goal print the target amount required
         //savingsGoalList.forEach(s -> System.out.println(s.getTarget().toString()));
 
-        
+
 
 //        Amount savingTarget = new Amount("GBP", 15000L);
 //        String savingsGoalsUid = httpClient.createSavingsGoal(accountUid, new BankAccountInterface.SavingsGoalReq("Trip to Norway", "GBP", savingTarget));
 //        System.out.println(savingsGoalsUid);
 //        savingsGoalsUid = savingsGoalsUid.replaceAll("\"", "");
 //
-//
+        /**
+         * it's possible to pass a savingsGoalUid to the following method, instead of hardcoding a savingsGoalUid in the params
+         */
         Boolean sendMoneyToSavingsGoal = roundUpOperation.transferRoundUpToGoal(account, roundUpMoney, fromDate, toDate, "e7ca3b72-9001-43d4-b1a3-cb8bbe8f59bf");
         if(!sendMoneyToSavingsGoal){
             System.out.println("Error in sending money");

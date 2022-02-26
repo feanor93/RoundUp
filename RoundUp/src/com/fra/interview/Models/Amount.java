@@ -6,7 +6,9 @@ import java.util.Locale;
 public class Amount {
 
 
-    //use NumberFormat library to create a Locale instance of the money (changes depending on the country)
+    /**
+     *use NumberFormat library to create a Locale instance of the money (changes depending on the country)
+     */
     private static final NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.UK);
 
 
@@ -20,7 +22,9 @@ public class Amount {
         this.minorUnits = minorUnits;
     }
 
-    //method to format the output of the amounts, otherwise it would be an unformatted java object
+    /**
+     * method to format the output of the amounts, otherwise it would be an unformatted java object
+     */
 
     public String toString() {
         return nf.format(minorUnits * 0.01d);

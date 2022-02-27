@@ -37,13 +37,13 @@ public class HttpConnect implements HttpConnectInterface {
     @Override
     public List<Account> getAccounts() throws IOException {
         URL devUrl = new URL(url+ Constants.Accounts);
-        String output = PerformGetQuery(devUrl);
+        String output = HttpHelper.PerformGetQuery(devUrl);
 
         JsonObject accountsJsonObject = gson.fromJson(output, JsonObject.class);
         JsonArray accountsJsonArr = accountsJsonObject.getAsJsonArray("accounts");
 
         /**
-         *         it's possible to have multiple account, this function returns a list of every account (if it's a single one then it just returns a 1-d list)
+         * it's possible to have multiple account, this function returns a list of every account (if it's a single one then it just returns a 1-dim list)
          */
         List<Account> listOfAccounts = new ArrayList<>();
 
@@ -54,11 +54,11 @@ public class HttpConnect implements HttpConnectInterface {
     @Override
     public Balance getAccountBalance(String accountUid) throws IOException {
         URL devUrlBalance = new URL(url+Constants.Accounts+"/"+accountUid+Constants.Balance);
-        String output = PerformGetQuery(devUrlBalance);
+        String output = HttpHelper.PerformGetQuery(devUrlBalance);
         JsonObject accountBalanceObject = gson.fromJson(output, JsonObject.class);
         JsonElement totalBalance = accountBalanceObject.get("amount");
         /**
-         *         it's possible to have multiple account, this function returns a list of every account (if it's a single one then it just returns a 1-d list)
+         *  given a specific accountUid, it returns the totalBalance of it
          */
 
         return new Balance(gson.fromJson(totalBalance, Amount.class));
@@ -67,7 +67,7 @@ public class HttpConnect implements HttpConnectInterface {
     @Override
     public List<Transaction> getTransactionFeeds(String accountUid, String categoryUid, String fromDate, String toDate) throws IOException {
         URL devUrlTransactionFeeds = new URL(url+"/feed"+Constants.Account+"/"+accountUid+"/category/"+categoryUid+Constants.TransactionsBetween+ Constants.MinTransactionTimestamp+fromDate+"&"+Constants.MaxTransactionTimestamp+toDate);
-        String output = PerformGetQuery(devUrlTransactionFeeds);
+        String output = HttpHelper.PerformGetQuery(devUrlTransactionFeeds);
         JsonObject transactionFeedObj = gson.fromJson(output, JsonObject.class);
         JsonArray transactionFeedArr = transactionFeedObj.getAsJsonArray("feedItems");
         /**
@@ -83,7 +83,7 @@ public class HttpConnect implements HttpConnectInterface {
     @Override
     public List<SavingsGoal> getAllSavingsGoals(String accountUid) throws IOException {
         URL devUrlSavingsGoals = new URL(url+Constants.Account+"/"+accountUid+Constants.SavingsGoals);
-        String output = PerformGetQuery(devUrlSavingsGoals);
+        String output = HttpHelper.PerformGetQuery(devUrlSavingsGoals);
         JsonObject savingsGoalsJsonObj = gson.fromJson(output, JsonObject.class);
         JsonArray savingsGoalsJsonArr = savingsGoalsJsonObj.getAsJsonArray("savingsGoalList");
 /**
@@ -99,8 +99,10 @@ public class HttpConnect implements HttpConnectInterface {
     @Override
     public SavingsGoal getSavingsGoal(String accountUid, String savingsGoalUid) throws IOException {
         URL devUrlSavingsGoal = new URL(url+Constants.Account+accountUid+Constants.SavingsGoals+savingsGoalUid);
-        //Retrieves a specific Savings Goal (i.e. Trip to Norway)
-        String output = PerformGetQuery(devUrlSavingsGoal);
+        /**
+         * Retrieves a specific Savings Goal (i.e. Trip to Norway)
+         */
+        String output = HttpHelper.PerformGetQuery(devUrlSavingsGoal);
         return gson.fromJson(output, SavingsGoal.class);
     }
 
@@ -113,7 +115,7 @@ public class HttpConnect implements HttpConnectInterface {
  *         Note: I created many savingsGoals for testing purposes, this method should be called from Main only if we want to create a new Goal
  *         i.e. Saving for a new Car
  *
- *         the method reeives in input the json (created in the main method) to pass in the body containing
+ *         the method receives in input the json (created in the main method) to pass in the body containing
  *         {
  *           "name": "Trip to Paris",
  *           "currency": "GBP",
@@ -128,7 +130,7 @@ public class HttpConnect implements HttpConnectInterface {
         String savingsGoalReqJson = gson.toJson(savingsGoalReq);
 
         URL devSavingsGoal = new URL(url+Constants.Account+"/"+accountUid+Constants.SavingsGoals);
-        String output = PerformPutRequestToCreateAGoal(savingsGoalReqJson, devSavingsGoal);
+        String output = HttpHelper.PerformPutRequestToCreateAGoal(savingsGoalReqJson, devSavingsGoal);
         JsonObject savingsGoalUidObj = gson.fromJson(output, JsonObject.class);
         //returns the savingsGoalUid generated from the server
         //this value is used to access a specific SavingsGoal in other methods
@@ -202,59 +204,4 @@ public class HttpConnect implements HttpConnectInterface {
     }
 
 
-    //method that performs a GET query to the StarlingAPIs
-    private String PerformGetQuery(URL devUrl) throws IOException {
-        StringBuilder buffer = new StringBuilder();
-        HttpURLConnection conn = (HttpURLConnection) devUrl.openConnection();
-
-
-        conn.setRequestMethod("GET");
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("Authorization", "Bearer "+Constants.AuthToken);
-        int responseCode = conn.getResponseCode();
-        String output;
-        try(BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream())
-        )){
-            while((output = reader.readLine()) != null){
-                buffer.append(output);
-                buffer.append("\n");
-            }
-        }catch (Exception e){
-            System.out.println("error");
-        }
-        output = buffer.toString();
-        return output;
-    }
-
-    private String PerformPutRequestToCreateAGoal(String savingsGoalReqJson, URL devSavingsGoal) throws IOException {
-        StringBuilder buffer = new StringBuilder();
-        HttpURLConnection conn = (HttpURLConnection) devSavingsGoal.openConnection();
-
-        System.out.println(devSavingsGoal);
-        conn.setRequestMethod("PUT");
-        conn.setDoOutput(true);
-        conn.setRequestProperty("Accept", "application/json");
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Authorization", "Bearer "+Constants.AuthToken);
-
-        OutputStreamWriter osw = new OutputStreamWriter(conn.getOutputStream());
-        osw.write(String.valueOf(savingsGoalReqJson));
-        osw.flush();
-        osw.close();
-        int responseCode = conn.getResponseCode();
-        String output;
-        try(BufferedReader reader = new BufferedReader(
-                new InputStreamReader(conn.getInputStream())
-        )){
-            while((output = reader.readLine()) != null){
-                buffer.append(output);
-                buffer.append("\n");
-            }
-        }catch (Exception e){
-            System.out.println("error");
-        }
-        output = buffer.toString();
-        return output;
-    }
 }

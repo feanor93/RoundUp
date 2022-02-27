@@ -66,7 +66,7 @@ public class Main {
         Amount roundUpMoney = roundUpOperation.doRoundUp(allTransactions);
 
         //this is how much the tool rounded up
-        //System.out.println("rounded up: " + roundUpMoney.toString());
+        System.out.println("rounded up: " + roundUpMoney.toString());
 
         //check if roundUp is empty, if so end
         if(roundUpMoney.getMinorUnits() == 0){
@@ -99,7 +99,7 @@ public class Main {
         /**
          * it's possible to pass a savingsGoalUid to the following method, instead of hardcoding a savingsGoalUid in the params
          */
-        Boolean sendMoneyToSavingsGoal = roundUpOperation.transferRoundUpToGoal(account, roundUpMoney, fromDate, toDate, "e7ca3b72-9001-43d4-b1a3-cb8bbe8f59bf");
+        Boolean sendMoneyToSavingsGoal = roundUpOperation.transferRoundUpToGoal(account, roundUpMoney, fromDate, toDate, "00072cdf-1c50-4b27-8eb8-1fb74fdb4258");
         if(!sendMoneyToSavingsGoal){
             System.out.println("Error in sending money");
             System.exit(0);

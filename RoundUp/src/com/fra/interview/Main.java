@@ -32,7 +32,7 @@ public class Main {
 
         Account account = accounts.get(0);
         String accountUid = account.getAccountUid();
-        //System.out.println("accountUid: " + accountUid);
+        System.out.println("accountUid: " + accountUid);
 
         //get account balance
         Balance balance = bankAccountInterface.getBalance(accountUid);
@@ -40,8 +40,8 @@ public class Main {
         /**
          * it's possible to retrieve the currency and the minorUnits for the balance
          */
-        //System.out.println("balance in total is: " + balance.getAmount().getCurrency());
-        //System.out.println("balance minorUnits: " + balance.getAmount().getMinorUnits());
+        System.out.println("balance in total is: " + balance.getAmount().getCurrency());
+        System.out.println("balance with minorUnits: " + balance.getAmount().getMinorUnits());
 
 
         //get last week's transactions, where fromDate is one week from today
@@ -82,24 +82,24 @@ public class Main {
          *
          */
         List<SavingsGoal> savingsGoalList = roundUpOperation.getAllSavingsGoals(accountUid, roundUpMoney);
-        //System.out.println("list of how many savingsGoals for this account: " + savingsGoalList.size());
-        //for every goal print the total amount of money saved
-        //savingsGoalList.forEach(s -> System.out.println(s.getTotalSaved().toString()));
+//        System.out.println("list of how many savingsGoals for this account: " + savingsGoalList.size());
+//        //for every goal print the total amount of money saved
+//        savingsGoalList.forEach(s -> System.out.println(s.getTotalSaved().toString()));
+//
+//        //for every goal print the target amount required
+//        savingsGoalList.forEach(s -> System.out.println(s.getTarget().toString()));
 
-        //for every goal print the target amount required
-        //savingsGoalList.forEach(s -> System.out.println(s.getTarget().toString()));
 
 
-
-//        Amount savingTarget = new Amount("GBP", 15000L);
-//        String savingsGoalsUid = httpClient.createSavingsGoal(accountUid, new BankAccountInterface.SavingsGoalReq("Trip to Norway", "GBP", savingTarget));
+//        Amount savingTarget = new Amount("GBP", 30000L);
+//        String savingsGoalsUid = httpClient.createSavingsGoal(accountUid, new BankAccountInterface.SavingsGoalReq("Tesla", "GBP", savingTarget));
 //        System.out.println(savingsGoalsUid);
 //        savingsGoalsUid = savingsGoalsUid.replaceAll("\"", "");
 //
         /**
          * it's possible to pass a savingsGoalUid to the following method, instead of hardcoding a savingsGoalUid in the params
          */
-        Boolean sendMoneyToSavingsGoal = roundUpOperation.transferRoundUpToGoal(account, roundUpMoney, fromDate, toDate, "00072cdf-1c50-4b27-8eb8-1fb74fdb4258");
+        Boolean sendMoneyToSavingsGoal = roundUpOperation.transferRoundUpToGoal(account, roundUpMoney, fromDate, toDate, "1c3133de-46f2-4ec4-9cb1-6d46b818f1f6");
         if(!sendMoneyToSavingsGoal){
             System.out.println("Error in sending money");
             System.exit(0);

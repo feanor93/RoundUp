@@ -24,9 +24,9 @@ public class RoundUpOperation {
 
         //get all transactions from account
         List<Transaction> allTransactions = bankAccountInterface.getTransactions(account.getAccountUid(), account.getDefaultCategory(), fromDate, toDate);
-//        for (Transaction allTransaction : allTransactions) {
-//            System.out.println(allTransaction.getAmount());
-//        }
+       for (Transaction allTransaction : allTransactions) {
+            System.out.println(allTransaction.getAmount());
+       }
         return allTransactions;
     }
 

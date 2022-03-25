@@ -67,6 +67,7 @@ public class HttpConnect implements HttpConnectInterface {
     @Override
     public List<Transaction> getTransactionFeeds(String accountUid, String categoryUid, String fromDate, String toDate) throws IOException {
         URL devUrlTransactionFeeds = new URL(url+"/feed"+Constants.Account+"/"+accountUid+"/category/"+categoryUid+Constants.TransactionsBetween+ Constants.MinTransactionTimestamp+fromDate+"&"+Constants.MaxTransactionTimestamp+toDate);
+        System.out.println("last week transactions URL:  "+ devUrlTransactionFeeds);
         String output = HttpHelper.PerformGetQuery(devUrlTransactionFeeds);
         JsonObject transactionFeedObj = gson.fromJson(output, JsonObject.class);
         JsonArray transactionFeedArr = transactionFeedObj.getAsJsonArray("feedItems");
@@ -83,6 +84,7 @@ public class HttpConnect implements HttpConnectInterface {
     @Override
     public List<SavingsGoal> getAllSavingsGoals(String accountUid) throws IOException {
         URL devUrlSavingsGoals = new URL(url+Constants.Account+"/"+accountUid+Constants.SavingsGoals);
+        System.out.println("devUrlSavingGolas: " + devUrlSavingsGoals);
         String output = HttpHelper.PerformGetQuery(devUrlSavingsGoals);
         JsonObject savingsGoalsJsonObj = gson.fromJson(output, JsonObject.class);
         JsonArray savingsGoalsJsonArr = savingsGoalsJsonObj.getAsJsonArray("savingsGoalList");
